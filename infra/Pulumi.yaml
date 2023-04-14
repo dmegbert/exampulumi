@@ -1,0 +1,6 @@
+name: exampulumi
+runtime:
+  name: python
+  options:
+    virtualenv: venv
+description: Python examples of using pulumi infrastructure as code (IaC) for deploying to AWS
