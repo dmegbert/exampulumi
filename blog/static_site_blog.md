@@ -5,7 +5,7 @@
 The following blog will walk you through setting up a secure static in AWS while using Pulumi
 to provision and configure all the required infrastructure and deploy the static site files.
 
-You can also read this blog on [Medium by clicking here.](It is also [on Medium here.](https://medium.com/@dmegbert/deploying-a-production-grade-static-site-on-aws-using-route53-cloudfront-and-s3-with-pulumi-17d95f9a283a))
+You can also read this blog on [Medium by clicking here.](https://medium.com/@dmegbert/deploying-a-production-grade-static-site-on-aws-using-route53-cloudfront-and-s3-with-pulumi-17d95f9a283a))
 
 ## Prerequisites
 - An AWS account where you have full permissions
