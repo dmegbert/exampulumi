@@ -35,4 +35,9 @@ However, different stacks do lead to different infrastructure needs and YMMV, et
 ## Topics
 
 ### 1.) Static Site
-_Branch is `1-static-site`_
+- Branch is `1-static-site`
+- AWS services used: Route53, ACM, CloudFront, S3
+- The blog for the static site can be read at the following locations:
+  - In this repo at [static site blog](https://github.com/dmegbert/exampulumi/blob/main/blog/static_site_blog.md)
+  - It is also [on Medium here.](https://medium.com/@dmegbert/deploying-a-production-grade-static-site-on-aws-using-route53-cloudfront-and-s3-with-pulumi-17d95f9a283a)
+  - And on [my website here.](https://gingerbeans.tech/blog/static_site_blog)
