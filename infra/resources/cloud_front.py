@@ -2,6 +2,7 @@ import pulumi_aws as aws
 
 from config import env, prefix, domain_name, PROD
 from resources.acm import cert
+from resources.aws_lambda import fastapi_lambda_url
 from resources.route_53 import hosted_zone
 from resources.s3 import cf_log_bucket, static_bucket
 
@@ -9,7 +10,9 @@ alias = domain_name if env == PROD else f"{env}.{domain_name}"
 
 
 def create_cloudfront_distribution(
-    certificate: aws.acm.Certificate, bucket: aws.s3.Bucket
+    certificate: aws.acm.Certificate,
+    bucket: aws.s3.Bucket,
+    lambda_function_url: aws.lambda_.FunctionUrl,
 ) -> aws.cloudfront.Distribution:
     s3_origin_id = f"{prefix}-s3-origin-id"
     origin_access_control = aws.cloudfront.OriginAccessControl(
@@ -18,6 +21,13 @@ def create_cloudfront_distribution(
         origin_access_control_origin_type="s3",
         signing_behavior="always",
         signing_protocol="sigv4",
+    )
+    lambda_origin_id = f"{prefix}-lambda-origin-id"
+    lambda_cache_policy = aws.cloudfront.get_cache_policy(
+        name="Managed-CachingDisabled"
+    )
+    lambda_origin_request_policy = aws.cloudfront.get_origin_request_policy(
+        name="Managed-AllViewerExceptHostHeader"
     )
 
     return aws.cloudfront.Distribution(
@@ -59,6 +69,25 @@ def create_cloudfront_distribution(
             max_ttl=0,
         ),
         default_root_object="index.html",
+        ordered_cache_behaviors=[
+            aws.cloudfront.DistributionOrderedCacheBehaviorArgs(
+                path_pattern="api/*",
+                target_origin_id=lambda_origin_id,
+                viewer_protocol_policy="redirect-to-https",
+                cached_methods=["GET", "HEAD"],
+                allowed_methods=[
+                    "GET",
+                    "HEAD",
+                    "OPTIONS",
+                    "PUT",
+                    "POST",
+                    "PATCH",
+                    "DELETE",
+                ],
+                cache_policy_id=lambda_cache_policy.id,
+                origin_request_policy_id=lambda_origin_request_policy.id,
+            )
+        ],
         enabled=True,
         is_ipv6_enabled=True,
         logging_config=aws.cloudfront.DistributionLoggingConfigArgs(
@@ -70,7 +99,19 @@ def create_cloudfront_distribution(
                 domain_name=bucket.bucket_domain_name,
                 origin_id=s3_origin_id,
                 origin_access_control_id=origin_access_control.id,
-            )
+            ),
+            aws.cloudfront.DistributionOriginArgs(
+                domain_name=lambda_function_url.function_url.apply(
+                    lambda url: url.replace("https://", "").replace("/", "")
+                ),
+                origin_id=lambda_origin_id,
+                custom_origin_config=aws.cloudfront.DistributionOriginCustomOriginConfigArgs(
+                    http_port=80,
+                    https_port=443,
+                    origin_protocol_policy="https-only",
+                    origin_ssl_protocols=["TLSv1.2"],
+                ),
+            ),
         ],
         restrictions=aws.cloudfront.DistributionRestrictionsArgs(
             geo_restriction=aws.cloudfront.DistributionRestrictionsGeoRestrictionArgs(
@@ -79,13 +120,15 @@ def create_cloudfront_distribution(
         ),
         viewer_certificate=aws.cloudfront.DistributionViewerCertificateArgs(
             acm_certificate_arn=certificate.arn,
-            minimum_protocol_version="TLSv1.2_2021",
+            minimum_protocol_version="TLSv1",
             ssl_support_method="sni-only",
         ),
     )
 
 
-cf_distro = create_cloudfront_distribution(certificate=cert, bucket=static_bucket)
+cf_distro = create_cloudfront_distribution(
+    certificate=cert, bucket=static_bucket, lambda_function_url=fastapi_lambda_url
+)
 
 
 def create_dns_records(
