@@ -5,8 +5,8 @@
 - [Organization](#organization)
 - [Tech Stack](#tech-stack)
 - [Topics](#topics)
-  - [Static Site](#static-site)
-  - [Dockerized API on AWS Lambda](#dockerized-api-on-aws-lambda)
+  - [Static Site](#1-static-site)
+  - [Dockerized API on AWS Lambda](#2-dockerized-api-on-aws-lambda)
 
 ## Introduction
 _For basic information on pulumi, sign up, go to their site at
@@ -50,3 +50,11 @@ However, different stacks do lead to different infrastructure needs and YMMV, et
   - In this repo at [API Lambda](https://github.com/dmegbert/exampulumi/blob/main/blog/api_aws_lambda.md)
   - It is also [on Medium here.](https://aws.plainenglish.io/simplifying-serverless-deploy-a-docker-based-api-using-aws-lambda-function-urls-no-api-gateway-c18016591663)
   - And on [my website here.](https://gingerbeans.tech/blog/api_aws_lambda)
+
+### 3) Securing your serverless stack with WAF and WAF_V2
+- Branch is `3-secure-api-and-cdn-with-waf`
+- AWS services used: API Gateway, WAF, WAF_V2, CloudFront
+- The blog that accompanies this code can be read at the following locations:
+  - In this repo at [Securing Serverless](https://github.com/dmegbert/exampulumi/blob/main/blog/securing_serverless.md)
+  - It is also []()
+  - And on []()

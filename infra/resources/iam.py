@@ -36,3 +36,9 @@ lambda_role_policy = aws.iam.RolePolicy(
         ]
     }""",
 )
+
+lambda_role_policy_attachment = aws.iam.RolePolicyAttachment(
+    f"{prefix}-lambda-role-policy-attachment",
+    role=lambda_role.name,
+    policy_arn=aws.iam.ManagedPolicy.AWS_LAMBDA_BASIC_EXECUTION_ROLE,
+)

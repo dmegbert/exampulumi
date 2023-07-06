@@ -1,3 +1,5 @@
 config:
   aws:region: us-east-2
   exampulumi:env: prod
+  exampulumi:origin-header:
+    secure: AAABAAGTxmdy+nVfVejz6VD9tuekpWkOc6+OFe6vdr5j+wo1e33L+322v/IHGKFvVNWPg024DtbdHezw5wuBQg==

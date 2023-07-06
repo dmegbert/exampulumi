@@ -39,17 +39,3 @@ lambda_alias = aws.lambda_.Alias(
     function_name=fastapi_lambda.name,
     function_version=fastapi_lambda.version,
 )
-
-fastapi_lambda_url = aws.lambda_.FunctionUrl(
-    f"{prefix}-lambda-url",
-    function_name=fastapi_lambda.name,
-    qualifier=lambda_alias.name,
-    authorization_type="NONE",
-    cors=aws.lambda_.FunctionUrlCorsArgs(
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_origins=["*"],
-        allow_headers=["*"],
-        max_age=600,
-    ),
-)

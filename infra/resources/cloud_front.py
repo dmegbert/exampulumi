@@ -1,10 +1,18 @@
 import pulumi_aws as aws
 
-from config import env, prefix, domain_name, PROD
+from config import (
+    env,
+    prefix,
+    domain_name,
+    PROD,
+    origin_header_value,
+    origin_header_name,
+)
 from resources.acm import cert
-from resources.aws_lambda import fastapi_lambda_url
+from resources.api_gateway import api_gw_stage
 from resources.route_53 import hosted_zone
 from resources.s3 import cf_log_bucket, static_bucket
+from resources.waf_v2 import aws_managed_rules_acl
 
 alias = domain_name if env == PROD else f"{env}.{domain_name}"
 
@@ -12,7 +20,7 @@ alias = domain_name if env == PROD else f"{env}.{domain_name}"
 def create_cloudfront_distribution(
     certificate: aws.acm.Certificate,
     bucket: aws.s3.Bucket,
-    lambda_function_url: aws.lambda_.FunctionUrl,
+    api_gateway_stage: aws.apigateway.Stage,
 ) -> aws.cloudfront.Distribution:
     s3_origin_id = f"{prefix}-s3-origin-id"
     origin_access_control = aws.cloudfront.OriginAccessControl(
@@ -22,11 +30,11 @@ def create_cloudfront_distribution(
         signing_behavior="always",
         signing_protocol="sigv4",
     )
-    lambda_origin_id = f"{prefix}-lambda-origin-id"
-    lambda_cache_policy = aws.cloudfront.get_cache_policy(
+    api_gateway_origin_id = f"{prefix}-fastapi_gateway-origin-id"
+    api_gateway_cache_policy = aws.cloudfront.get_cache_policy(
         name="Managed-CachingDisabled"
     )
-    lambda_origin_request_policy = aws.cloudfront.get_origin_request_policy(
+    api_gateway_origin_request_policy = aws.cloudfront.get_origin_request_policy(
         name="Managed-AllViewerExceptHostHeader"
     )
 
@@ -72,7 +80,7 @@ def create_cloudfront_distribution(
         ordered_cache_behaviors=[
             aws.cloudfront.DistributionOrderedCacheBehaviorArgs(
                 path_pattern="api/*",
-                target_origin_id=lambda_origin_id,
+                target_origin_id=api_gateway_origin_id,
                 viewer_protocol_policy="redirect-to-https",
                 cached_methods=["GET", "HEAD"],
                 allowed_methods=[
@@ -84,8 +92,8 @@ def create_cloudfront_distribution(
                     "PATCH",
                     "DELETE",
                 ],
-                cache_policy_id=lambda_cache_policy.id,
-                origin_request_policy_id=lambda_origin_request_policy.id,
+                cache_policy_id=api_gateway_cache_policy.id,
+                origin_request_policy_id=api_gateway_origin_request_policy.id,
             )
         ],
         enabled=True,
@@ -101,21 +109,36 @@ def create_cloudfront_distribution(
                 origin_access_control_id=origin_access_control.id,
             ),
             aws.cloudfront.DistributionOriginArgs(
-                domain_name=lambda_function_url.function_url.apply(
-                    lambda url: url.replace("https://", "").replace("/", "")
+                domain_name=api_gateway_stage.invoke_url.apply(
+                    lambda url: url.replace("https://", "").replace(f"/{env}", "")
                 ),
-                origin_id=lambda_origin_id,
+                origin_id=api_gateway_origin_id,
+                origin_path=f"/{env}",
                 custom_origin_config=aws.cloudfront.DistributionOriginCustomOriginConfigArgs(
                     http_port=80,
                     https_port=443,
                     origin_protocol_policy="https-only",
                     origin_ssl_protocols=["TLSv1.2"],
                 ),
+                custom_headers=[
+                    aws.cloudfront.DistributionOriginCustomHeaderArgs(
+                        name=origin_header_name,
+                        value=origin_header_value,
+                    )
+                ],
             ),
         ],
         restrictions=aws.cloudfront.DistributionRestrictionsArgs(
             geo_restriction=aws.cloudfront.DistributionRestrictionsGeoRestrictionArgs(
-                restriction_type="none",
+                restriction_type="blacklist",
+                locations=[
+                    # https://www.bis.doc.gov/index.php/policy-guidance/country-guidance/sanctioned-destinations
+                    "CU",
+                    "IR",
+                    "KP",
+                    "SY",
+                    "RU",
+                ],
             ),
         ),
         viewer_certificate=aws.cloudfront.DistributionViewerCertificateArgs(
@@ -123,11 +146,13 @@ def create_cloudfront_distribution(
             minimum_protocol_version="TLSv1",
             ssl_support_method="sni-only",
         ),
+        # To specify a web ACL created using the latest version of AWS WAF (WAFv2), use the ACL ARN - REALLY?!?!
+        web_acl_id=aws_managed_rules_acl.arn,
     )
 
 
 cf_distro = create_cloudfront_distribution(
-    certificate=cert, bucket=static_bucket, lambda_function_url=fastapi_lambda_url
+    certificate=cert, bucket=static_bucket, api_gateway_stage=api_gw_stage
 )
 
 
