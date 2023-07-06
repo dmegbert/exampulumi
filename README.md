@@ -43,7 +43,7 @@ However, different stacks do lead to different infrastructure needs and YMMV, et
   - And on [my website here.](https://gingerbeans.tech/blog/static_site_blog)
 
 ### 2.) Dockerized API on AWS Lambda
-- Branch is 2-api-lambda
+- Branch is `2-api-lambda`
 - AWS services used: Cloudfront, AWS Lambda, ECR, IAM
 - The blog that accompanies this code can be read at the following locations:
   - In this repo at [API Lambda](https://github.com/dmegbert/exampulumi/blob/main/blog/api_aws_lambda.md)
