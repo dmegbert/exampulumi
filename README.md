@@ -5,8 +5,8 @@
 - [Organization](#organization)
 - [Tech Stack](#tech-stack)
 - [Topics](#topics)
-  - [Static Site](#static-site)
-  - [Dockerized API on AWS Lambda](#dockerized-api-on-aws-lambda)
+  - [Static Site](#1-static-site)
+  - [Dockerized API on AWS Lambda](#2-dockerized-api-on-aws-lambda)
 
 ## Introduction
 _For basic information on pulumi, sign up, go to their site at
