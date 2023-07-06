@@ -42,7 +42,7 @@ However, different stacks do lead to different infrastructure needs and YMMV, et
   - It is also [on Medium here.](https://medium.com/@dmegbert/deploying-a-production-grade-static-site-on-aws-using-route53-cloudfront-and-s3-with-pulumi-17d95f9a283a)
   - And on [my website here.](https://gingerbeans.tech/blog/static_site_blog)
 
-### 1.) Dockerized API on AWS Lambda
+### 2.) Dockerized API on AWS Lambda
 - Branch is 2-api-lambda
 - AWS services used: Cloudfront, AWS Lambda, ECR, IAM
 - The blog that accompanies this code can be read at the following locations:
