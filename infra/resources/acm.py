@@ -1,12 +1,8 @@
 import pulumi
 import pulumi_aws as aws
 
-from config import domain_name, env, prefix, PROD
+from config import domain_name, env, prefix, PROD, us_east_1
 from resources.route_53 import hosted_zone
-
-# CloudFront is in us-east-1. So you must create the certificate in
-# us-east-1 regardless of your default AWS region
-us_east_1 = aws.Provider("us-east-1", region="us-east-1")
 
 
 def create_certificate(hosted_zone_id: str) -> aws.acm.Certificate:
