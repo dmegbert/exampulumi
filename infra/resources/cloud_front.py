@@ -146,7 +146,7 @@ def create_cloudfront_distribution(
             minimum_protocol_version="TLSv1",
             ssl_support_method="sni-only",
         ),
-        # To specify a web ACL created using the latest version of AWS WAF (WAFv2), use the ACL ARN - REALLY?!?!
+        # To specify a web ACL created using the latest version of AWS WAF (WAFv2), use the ACL ARN
         web_acl_id=aws_managed_rules_acl.arn,
     )
 
