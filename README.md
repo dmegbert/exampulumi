@@ -8,6 +8,7 @@
   1. [Static Site](#1-static-site)
   2. [Dockerized API on AWS Lambda](#2-dockerized-api-on-aws-lambda)
   3. [Securing your serverless stack with WAF](#3-securing-your-serverless-stack-with-waf)
+  4. [Protect your apps with WAF v2 and AWS Managed Rules](#4-aws-waf-v2-with-managed-rules)
 
 ## Introduction
 _For basic information on pulumi, sign up, go to their site at
@@ -59,3 +60,11 @@ However, different stacks do lead to different infrastructure needs and YMMV, et
   - In this repo at [Securing Serverless](https://github.com/dmegbert/exampulumi/blob/main/blog/securing_serverless.md)
   - It is also [on Medium here.](https://aws.plainenglish.io/securing-serverless-protect-lambda-apps-with-an-api-gateway-and-waf-via-pulumi-iac-fbf018d3ef4a)
   - And on [my website here.](https://gingerbeans.tech/blog/securing_serverless)
+
+### 4) AWS WAF v2 with Managed Rules
+- Branch is `3-secure-api-and-cdn-with-waf`
+- AWS Services used: WAF v2 and CloudFront
+- The blog that accompanies this code can be read at the following locations:
+  - In this repo at [WAF v2 and AWS Managed Rules](https://github.com/dmegbert/exampulumi/blob/main/blog/waf_v2.md)
+  - It is also [on Medium here.](https://aws.plainenglish.io/protect-your-apps-with-aws-managed-rules-for-waf-v2-via-pulumi-iac-74fcdc568a51)
+  - And on [my website here.](https://gingerbeans.tech/blog/waf_v2)

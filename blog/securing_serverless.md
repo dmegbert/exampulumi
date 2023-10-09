@@ -4,14 +4,14 @@
 
 Keep the baddies out! (Generated on https://stablediffusionweb.com)
 
-Table of Contents
-· Prerequisites
-· What we are building
-· What we are destroying
-· Add an API Gateway
-· Connect your API Gateway to your CloudFront Distribution
-· Protect your API Gateway with a Regional WAF
-· Conclusion
+## Table of Contents
+- [Prerequisites](#prerequisites)
+- [What we are building](#what-we-are-building)
+- [What we are destroying](#what-we-are-destroying)
+- [Add an API Gateway](#add-an-api-gateway)
+- [Connect your API Gateway to your CloudFront Distribution](#connect-your-api-gateway-to-your-cloudfront-distribution)
+- [Protect your API Gateway with a Regional WAF](#protect-your-api-gateway-with-a-regional-waf)
+- [Conclusion](#conclusion)
 
 ## Prerequisites
 - An AWS account where you have full permissions
