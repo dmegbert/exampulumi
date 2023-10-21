@@ -12,7 +12,8 @@ from resources.acm import cert
 from resources.api_gateway import api_gw_stage
 from resources.route_53 import hosted_zone
 from resources.s3 import cf_log_bucket, static_bucket
-from resources.waf_v2 import aws_managed_rules_acl
+
+# from resources.waf_v2 import aws_managed_rules_acl
 
 alias = domain_name if env == PROD else f"{env}.{domain_name}"
 
@@ -147,7 +148,7 @@ def create_cloudfront_distribution(
             ssl_support_method="sni-only",
         ),
         # To specify a web ACL created using the latest version of AWS WAF (WAFv2), use the ACL ARN
-        web_acl_id=aws_managed_rules_acl.arn,
+        # web_acl_id=aws_managed_rules_acl.arn,
     )
 
 
