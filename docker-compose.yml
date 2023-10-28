@@ -1,6 +1,9 @@
 version: "3.8"
 services:
   api:
+    container_name: api
+    tty: true
+    stdin_open: true
     build:
       context: ./backend
       dockerfile: local.Dockerfile
@@ -16,6 +19,7 @@ services:
       - db
 
   db:
+    container_name: db
     image: postgres:13
     volumes:
       - ./db_data/pgdata:/var/lib/postgresql/data
@@ -25,6 +29,7 @@ services:
       - "5432:5432"
 
   test_db:
+    container_name: test_db
     image: postgres:13
     volumes:
       - ./test_db_data/pgdata:/var/lib/postgresql/data
@@ -34,6 +39,7 @@ services:
       - "2345:5432"
 
   ui:
+    container_name: ui
     build:
       context: ./ui
     stdin_open: true
