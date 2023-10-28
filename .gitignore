@@ -129,3 +129,6 @@ dmypy.json
 .pyre/
 .idea/
 .DS_Store
+.env*
+db_data/
+test_db_data/

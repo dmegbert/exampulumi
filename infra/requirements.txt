@@ -1,5 +1,5 @@
-pulumi==3.86.0
-pulumi-aws==6.3.0
+pulumi==3.91.1
+pulumi-aws==5.42.0
 pulumi-aws-apigateway==1.0.1
-pulumi-awsx==1.0.5
-pulumi-docker==4.4.1
+pulumi-awsx==1.0.6
+pulumi-docker==3.6.1
