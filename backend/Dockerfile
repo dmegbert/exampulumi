@@ -1,4 +1,4 @@
-FROM amazon/aws-lambda-python:3.10
+FROM amazon/aws-lambda-python:3.11
 
 # Install the function's dependencies using file requirements.txt
 # from your project folder.

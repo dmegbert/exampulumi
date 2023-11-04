@@ -1,14 +1,12 @@
-import uuid
-from typing import Union
-
-from fastapi import APIRouter, FastAPI
+from fastapi import FastAPI
 from fastapi.exceptions import RequestValidationError
-from pydantic.main import BaseModel
 from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
-from starlette.responses import JSONResponse
+from sqlalchemy.exc import IntegrityError
 
+from src.api import api_router
 from src.utils import service_logging
+from src.utils.exception_handling import validation_exception_handler, integrity_error_handler
 
 app = FastAPI(docs_url="/api/docs", openapi_url="/api/openapi.json")
 
@@ -21,10 +19,9 @@ app.add_middleware(
     expose_headers=["Request-ID"],
 )
 
-
-@app.exception_handler(RequestValidationError)
-def validation_exception_handler(request, exc):
-    return JSONResponse(status_code=400, content={"detail": exc.__str__()})
+# Register the custom exception handler
+app.exception_handler(RequestValidationError)(validation_exception_handler)
+app.exception_handler(IntegrityError)(integrity_error_handler)
 
 
 @app.middleware("http")
@@ -34,34 +31,4 @@ async def log_aws_request(request: Request, call_next):
     return response
 
 
-class Item(BaseModel):
-    title: str
-    description: str
-
-
-class ItemResponse(Item):
-    id: uuid.UUID
-
-
-router = APIRouter()
-
-
-@router.get("/hello")
-def read_hello():
-    return {"Hello": "World"}
-
-
-@router.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
-
-
-@router.post("/items", response_model=ItemResponse, status_code=201)
-def create_item(*, item: Item):
-    return ItemResponse(
-        **item.dict(),
-        id=uuid.uuid4(),
-    )
-
-
-app.include_router(router=router, prefix="/api")
+app.include_router(router=api_router, prefix="/api")

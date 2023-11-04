@@ -1,9 +1,6 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import ReactDOM from 'react-dom/client'
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom"
+import {createBrowserRouter, RouterProvider,} from "react-router-dom"
 import axios from "axios"
 
 function getBaseUrl(): string {
@@ -22,9 +19,11 @@ interface Item extends ItemRequest {
 
 function HelloWorld() {
     const [item, setItem] = useState<Item>()
+    const [items, setItems] = useState<Item[]>([])
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
     const baseUrl = getBaseUrl()
+    const [triggerFetch, setTriggerFetch] = useState(0)
 
     function createItem() {
         const data: ItemRequest = {
@@ -39,6 +38,30 @@ function HelloWorld() {
             })
             .catch(err => console.log(err))
     }
+
+    function deleteItem(id: string) {
+        axios.delete(`${baseUrl}/items/${id}`)
+            .then(() => {
+                setTriggerFetch(triggerFetch + 1)
+            })
+            .catch(err => console.log(err))
+    }
+
+    useEffect(() => {
+        axios.get(`${baseUrl}/items`)
+            .then((resp) => {
+                setItems([...resp.data])
+            })
+            .catch(err => console.log(err))
+    }, [baseUrl, item, triggerFetch])
+
+    const ItemsList = items.map((item) => (
+        <div>
+            <h4>Title: {item.title}</h4>
+            <p>Description: {item.description}</p>
+            <button onClick={() => deleteItem(item.id)}>Delete Me</button>
+        </div>
+    ))
 
     return (
         <div>
@@ -67,6 +90,7 @@ function HelloWorld() {
                     <h3>Item Description: {item.description}</h3>
                 </div>
             )}
+            {ItemsList}
         </div>
     )
 }
