@@ -1,9 +1,11 @@
 import secrets
 from typing import Any, Dict, List, Optional, Union
 
-from pydantic import AnyHttpUrl, BaseSettings, EmailStr, HttpUrl, PostgresDsn, validator
+from pydantic import AnyHttpUrl, EmailStr, HttpUrl, PostgresDsn, validator, field_validator
+from pydantic_settings import BaseSettings
 
 
+# noinspection PyNestedDecorators
 class Settings(BaseSettings):
     SECRET_KEY: str = secrets.token_urlsafe(32)
     # 60 minutes * 24 hours * 8 days = 8 days
@@ -15,7 +17,8 @@ class Settings(BaseSettings):
     # "http://localhost:8080", "http://local.dockertoolbox.tiangolo.com"]'
     BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = []
 
-    @validator("BACKEND_CORS_ORIGINS", pre=True)
+    @field_validator("BACKEND_CORS_ORIGINS")
+    @classmethod
     def assemble_cors_origins(cls, v: Union[str, List[str]]) -> Union[List[str], str]:
         if isinstance(v, str) and not v.startswith("["):
             return [i.strip() for i in v.split(",")]
@@ -26,7 +29,8 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "Exampulumi"
     SENTRY_DSN: Optional[HttpUrl] = None
 
-    @validator("SENTRY_DSN", pre=True)
+    @field_validator("SENTRY_DSN")
+    @classmethod
     def sentry_dsn_can_be_blank(cls, v: str) -> Optional[str]:
         if len(v) == 0:
             return None
@@ -38,7 +42,8 @@ class Settings(BaseSettings):
     POSTGRES_DB: str
     SQLALCHEMY_DATABASE_URI: Optional[PostgresDsn] = None
 
-    @validator("SQLALCHEMY_DATABASE_URI", pre=True)
+    @field_validator("SQLALCHEMY_DATABASE_URI")
+    @classmethod
     def assemble_db_connection(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
         if isinstance(v, str):
             return v
@@ -58,7 +63,8 @@ class Settings(BaseSettings):
     EMAILS_FROM_EMAIL: Optional[EmailStr] = None
     EMAILS_FROM_NAME: Optional[str] = None
 
-    @validator("EMAILS_FROM_NAME")
+    @field_validator("EMAILS_FROM_NAME")
+    @classmethod
     def get_project_name(cls, v: Optional[str], values: Dict[str, Any]) -> str:
         if not v:
             return values.get("PROJECT_NAME", "hello-nav")
@@ -68,7 +74,8 @@ class Settings(BaseSettings):
     EMAIL_TEMPLATES_DIR: str = "/src/src/email-templates/build"
     EMAILS_ENABLED: bool = False
 
-    @validator("EMAILS_ENABLED", pre=True)
+    @field_validator("EMAILS_ENABLED")
+    @classmethod
     def get_emails_enabled(cls, v: bool, values: Dict[str, Any]) -> bool:
         return bool(
             values.get("SMTP_HOST")
@@ -85,6 +92,7 @@ class Settings(BaseSettings):
         case_sensitive = True
 
 
+# noinspection PyNestedDecorators
 class DumbSettings(BaseSettings):
     PROJECT_NAME: str = "Exampulumi"
     BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = []
@@ -95,7 +103,7 @@ class DumbSettings(BaseSettings):
     POSTGRES_PASSWORD: str = "password"
     POSTGRES_DB: str = "app"
     POSTGRES_PORT: str = "5432"
-    SQLALCHEMY_DATABASE_URI: Optional[PostgresDsn] = None
+    SQLALCHEMY_DATABASE_URI: str = f"postgresql://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_SERVER}/{POSTGRES_DB}"
 
     AWS_LAMBDA_INITIALIZATION_TYPE: str = "Not a lambda"
 
@@ -108,18 +116,19 @@ class DumbSettings(BaseSettings):
     # Amplitude
     AMPLITUDE_API_KEY: str = ""
 
-    @validator("SQLALCHEMY_DATABASE_URI", pre=True)
-    def assemble_db_connection(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
-        if isinstance(v, str):
-            return v
-        return PostgresDsn.build(
-            scheme="postgresql",
-            user=values.get("POSTGRES_USER"),
-            password=values.get("POSTGRES_PASSWORD"),
-            host=values.get("POSTGRES_SERVER"),
-            path=f"/{values.get('POSTGRES_DB') or ''}",
-            port=values.get("POSTGRES_PORT"),
-        )
+    # @field_validator("SQLALCHEMY_DATABASE_URI")
+    # @classmethod
+    # def assemble_db_connection(cls, v: Optional[str], values: Dict[str, Any]) -> Any:
+    #     if isinstance(v, str):
+    #         return v
+    #     return PostgresDsn.build(
+    #         scheme="postgresql",
+    #         user=values.get("POSTGRES_USER"),
+    #         password=values.get("POSTGRES_PASSWORD"),
+    #         host=values.get("POSTGRES_SERVER"),
+    #         path=f"/{values.get('POSTGRES_DB') or ''}",
+    #         port=values.get("POSTGRES_PORT"),
+    #     )
 
 
 settings = DumbSettings()
