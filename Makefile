@@ -2,6 +2,12 @@ ENV_NAME ?= dev
 SERVICE_NAME = exampulumi
 BRANCH_NAME ?= $(shell git rev-parse --abbrev-ref HEAD)
 
+up:
+	docker-compose -f docker-compose.yml up -V -d $(c)
+
+down:
+	docker-compose -f docker-compose.yml down $(c)
+
 create-migration:
 ifdef message
 	cd backend; \

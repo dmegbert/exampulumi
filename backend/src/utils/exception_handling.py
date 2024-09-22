@@ -5,7 +5,7 @@ from sqlalchemy.exc import IntegrityError
 
 
 def validation_exception_handler(request: Request, exc: RequestValidationError):
-    return JSONResponse(status_code=400, content={"detail": exc.__str__()})
+    return JSONResponse(status_code=422, content={"detail": exc.errors()})
 
 
 def integrity_error_handler(reqeust: Request, exc: IntegrityError):
@@ -22,8 +22,8 @@ def parse_integrity_error(exc: IntegrityError):
     key = None
     value = None
 
-    if 'duplicate key' in message:
-        key = message.split('Key (', 1)[1].split(')=', 1)[0]
-        value = message.split(')=(', 1)[1].split(') ', 1)[0]
+    if "duplicate key" in message:
+        key = message.split("Key (", 1)[1].split(")=", 1)[0]
+        value = message.split(")=(", 1)[1].split(") ", 1)[0]
 
     return key, value
