@@ -1,6 +1,5 @@
 import uuid
 from datetime import datetime
-from typing import Optional
 
 from pydantic import ConfigDict
 from sqlalchemy import Column, DateTime, func
@@ -19,10 +18,10 @@ class BaseDatabaseModel(SQLModel):
     )
 
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
-    created: Optional[datetime] = Field(
+    created: datetime | None = Field(
         sa_column=Column(DateTime(timezone=True), server_default=func.now())
     )
-    updated: Optional[datetime] = Field(
+    updated: datetime | None = Field(
         sa_column=Column(
             DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
         )
