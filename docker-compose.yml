@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   api:
-    container_name: api
+    container_name: exampulumi_api
     tty: true
     stdin_open: true
     build:
@@ -9,7 +9,7 @@ services:
       dockerfile: local.Dockerfile
     command: uvicorn src.main:app --reload --proxy-headers --host 0.0.0.0 --port 8000
     ports:
-      - "8001:8000"
+      - "8000:8000"
     volumes:
       - ./backend:/backend
     env_file:
@@ -18,7 +18,7 @@ services:
       - db
 
   db:
-    container_name: db
+    container_name: exampulumi_db
     image: postgres:13
     volumes:
       - ./db_data/pgdata:/var/lib/postgresql/data

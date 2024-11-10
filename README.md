@@ -69,3 +69,11 @@ However, different stacks do lead to different infrastructure needs and YMMV, et
   - In this repo at [WAF v2 and AWS Managed Rules](https://github.com/dmegbert/exampulumi/blob/main/blog/waf_v2.md)
   - It is also [on Medium here.](https://aws.plainenglish.io/protect-your-apps-with-aws-managed-rules-for-waf-v2-via-pulumi-iac-74fcdc568a51)
   - And on [my website here.](https://gingerbeans.tech/blog/waf_v2)
+
+### 5) Adding a production-grade database to your FastAPI project--Local Setup
+- Branch is `5-add-local-database`
+- AWS Services used: NA (Local Setup)
+- The blog that accompanies this code can be read at the following locations:
+  - In this repo at [TBD]()
+  - It is also [on Medium here.](TBD)
+  - And on [my website here.](TBD)
