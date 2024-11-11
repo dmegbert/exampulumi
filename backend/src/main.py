@@ -1,12 +1,15 @@
 from fastapi import FastAPI
-from fastapi.exceptions import RequestValidationError
+from fastapi.exceptions import RequestValidationError, ResponseValidationError
 from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
 from sqlalchemy.exc import IntegrityError
 
 from src.api import api_router
 from src.utils import service_logging
-from src.utils.exception_handling import validation_exception_handler, integrity_error_handler
+from src.utils.exception_handling import (
+    validation_exception_handler,
+    integrity_error_handler,
+)
 
 app = FastAPI(docs_url="/api/docs", openapi_url="/api/openapi.json")
 
@@ -21,6 +24,7 @@ app.add_middleware(
 
 # Register the custom exception handler
 app.exception_handler(RequestValidationError)(validation_exception_handler)
+app.exception_handler(ResponseValidationError)(validation_exception_handler)
 app.exception_handler(IntegrityError)(integrity_error_handler)
 
 

@@ -20,6 +20,6 @@ RUN python3.11 -m pip install -r requirements.txt --use-pep517
 
 ENV PYTHONPATH=$PYTHONPATH:./src
 
-# ADD alembic alembic
-# COPY alembic.ini ./
+ADD alembic alembic
+COPY alembic.ini ./
 ADD src src

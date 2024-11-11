@@ -26,4 +26,6 @@ class ItemRead(ItemBase):
 
 
 class ItemUpdate(ItemBase):
-    id: uuid.UUID
+    description: str | None = None
+    is_active: bool | None = None
+    title: str | None = None
