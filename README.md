@@ -73,7 +73,4 @@ However, different stacks do lead to different infrastructure needs and YMMV, et
 ### 5) Adding a production-grade database to your FastAPI project--Local Setup
 - Branch is `5-add-local-database`
 - AWS Services used: NA (Local Setup)
-- The blog that accompanies this code can be read at the following locations:
-  - In this repo at [TBD]()
-  - It is also [on Medium here.](TBD)
-  - And on [my website here.](TBD)
+- The blog that accompanies this code can be read [on Medium here.](https://medium.com/python-in-plain-english/adding-a-production-grade-database-to-your-fastapi-project-local-setup-50107b10d539)
