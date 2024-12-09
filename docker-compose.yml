@@ -21,7 +21,7 @@ services:
     container_name: exampulumi_db
     image: postgres:13
     volumes:
-      - ./db_data/pgdata:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
     env_file:
       - .env
     ports:
@@ -31,7 +31,7 @@ services:
     container_name: test_db
     image: postgres:13
     volumes:
-      - ./test_db_data/pgdata:/var/lib/postgresql/data
+      - test_db_data:/var/lib/postgresql/data
     env_file:
       - .env
     ports:
@@ -47,3 +47,7 @@ services:
       - ./ui:/ui
     ports:
     - "80:3000"
+
+volumes:
+  db_data:
+  test_db_data:
