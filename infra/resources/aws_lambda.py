@@ -2,9 +2,11 @@ import platform
 
 import pulumi_aws as aws
 
-from config import env, prefix
+from config import env, prefix, DB_USER, DB_PASSWORD, DB_NAME
 from resources.ecr import image
 from resources.iam import lambda_role
+from resources.rds import db
+from resources.vpc import db_security_group, private_vpc
 
 
 def get_arch():
@@ -22,6 +24,12 @@ fastapi_lambda = aws.lambda_.Function(
         variables={
             "FUNCTION_NAME": f"{prefix}-lambda",
             "ENV_NAME": env,
+            "POSTGRES_SERVER": db.endpoint.apply(
+                lambda endpoint: endpoint.replace(":5432", "")
+            ),
+            "POSTGRES_USER": DB_USER,
+            "POSTGRES_PASSWORD": DB_PASSWORD,
+            "POSTGRES_DB": DB_NAME,
         }
     ),
     image_uri=image.image_uri,
@@ -30,6 +38,10 @@ fastapi_lambda = aws.lambda_.Function(
     publish=True,
     role=lambda_role.arn,
     timeout=600,
+    vpc_config=aws.lambda_.FunctionVpcConfigArgs(
+        security_group_ids=[db_security_group.id],
+        subnet_ids=private_vpc.private_subnet_ids,
+    ),
 )
 
 lambda_alias = aws.lambda_.Alias(

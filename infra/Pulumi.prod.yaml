@@ -3,3 +3,5 @@ config:
   exampulumi:env: prod
   exampulumi:origin-header:
     secure: AAABAAGTxmdy+nVfVejz6VD9tuekpWkOc6+OFe6vdr5j+wo1e33L+322v/IHGKFvVNWPg024DtbdHezw5wuBQg==
+  exampulumi:db_password:
+    secure: AAABAAgXQRlFhcQ86lummF+PXq3IG0MtaHM7QV0YlnTlLe/cXEuw7tL1RZ7MpKxllWsQqAReRe5mdQk+WKefWqc=
