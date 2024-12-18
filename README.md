@@ -4,11 +4,14 @@
 - [Introduction](#introduction)
 - [Organization](#organization)
 - [Tech Stack](#tech-stack)
-- [Topics](#topics)
-  1. [Static Site](#1-static-site)
-  2. [Dockerized API on AWS Lambda](#2-dockerized-api-on-aws-lambda)
-  3. [Securing your serverless stack with WAF](#3-securing-your-serverless-stack-with-waf)
-  4. [Protect your apps with WAF v2 and AWS Managed Rules](#4-aws-waf-v2-with-managed-rules)
+
+### [Topics](#topics)
+1. [Static Site](#1-static-site)
+2. [Dockerized API on AWS Lambda](#2-dockerized-api-on-aws-lambda)
+3. [Securing your serverless stack with WAF](#3-securing-your-serverless-stack-with-waf)
+4. [Protect your apps with WAF v2 and AWS Managed Rules](#4-aws-waf-v2-with-managed-rules)
+5. [Adding a database to your FastAPI project--Local Setup](#5-adding-a-production-grade-database-to-your-fastapi-project--local-setup)
+6. [Deploying a PostgreSQL database](#6-securely-deploying-a-postgresql-database-for-a-fastapi-app-in-aws-using-pulumi)
 
 
 ## Introduction
@@ -74,3 +77,8 @@ However, different stacks do lead to different infrastructure needs and YMMV, et
 - Branch is `5-add-local-database`
 - AWS Services used: NA (Local Setup)
 - The blog that accompanies this code can be read [on Medium here.](https://medium.com/python-in-plain-english/adding-a-production-grade-database-to-your-fastapi-project-local-setup-50107b10d539)
+
+### 6) Securely deploying a PostgreSQL database for a FastAPI app in AWS using Pulumi
+- Branch is `6-deploy-pg-database`
+- AWS Services used: VPC, NAT Gateway, RDS, Lambda
+- The blog that accompanies this code can be read [on Medium here.](https://aws.plainenglish.io/securely-deploying-a-postgresql-database-for-a-fastapi-app-in-aws-using-pulumi-602ce95fa90b)
