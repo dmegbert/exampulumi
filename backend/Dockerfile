@@ -1,4 +1,4 @@
-FROM amazon/aws-lambda-python:3.11
+FROM public.ecr.aws/lambda/python:3.12-arm64
 
 # Install the function's dependencies using file requirements.txt
 # from your project folder.
@@ -8,6 +8,8 @@ RUN  pip3 install -r requirements.txt --target "${LAMBDA_TASK_ROOT}"
 
 # Copy function code
 WORKDIR ${LAMBDA_TASK_ROOT}
+COPY alembic.ini .
+ADD alembic alembic
 ADD src src
 COPY lambda_handler.py .
 

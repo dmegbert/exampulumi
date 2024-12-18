@@ -13,6 +13,10 @@ PROD = "prod"
 DEV = "dev"
 origin_header_name = "X-Origin-Verify"
 origin_header_value = config.require("origin-header")
+DB_NAME = "exampulumiDb"
+DB_USER = f"{DB_NAME}User"
+DB_PASSWORD = config.require_secret("db_password")
+
 
 # CloudFront is in us-east-1. So you must create certain resources in
 # us-east-1 regardless of your default AWS region
